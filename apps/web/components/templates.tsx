@@ -34,7 +34,7 @@ export function Field({ label, children }: { label: string; children: React.Reac
 }
 
 export function ResultCard({ children }: { children: React.ReactNode }) {
-  return <div className="card bg-indigo-50 text-lg font-semibold">{children}</div>;
+  return <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-lg font-semibold text-slate-900">{children}</div>;
 }
 
 export type Output = { blob: Blob; name: string };
@@ -63,10 +63,10 @@ export function FileTool({ accept, multiple, actionLabel, run, extra, minFiles =
   return (
     <div className="space-y-4">
       {!noFiles && (
-        <div className="card cursor-pointer border-dashed py-10 text-center text-slate-500"
+        <div className="flex cursor-pointer flex-col items-center gap-1 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-12 text-center text-slate-500 transition hover:border-indigo-400 hover:bg-indigo-50"
           onClick={() => ref.current?.click()} onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => { e.preventDefault(); add(e.dataTransfer.files); }}>
-          Drop {multiple ? "files" : "a file"} here or click to browse
+          <span className="text-3xl">⬆️</span><span className="font-medium text-slate-700">Drop {multiple ? "files" : "a file"} here</span><span className="text-sm">or click to browse</span>
           <input ref={ref} type="file" hidden accept={accept} multiple={multiple} onChange={(e) => { add(e.target.files); e.target.value = ""; }} />
         </div>
       )}

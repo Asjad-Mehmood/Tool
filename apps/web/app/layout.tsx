@@ -1,24 +1,29 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+import type { Metadata, Viewport } from "next";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import "./globals.css";
 
+const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://toolhub.example";
 export const metadata: Metadata = {
-  title: { default: "ToolHub — All-in-One Online Tools", template: "%s | ToolHub" },
-  description: "Free online tools for PDF, images, text, developers, converters, calculators and survey work. Most run in your browser.",
+  metadataBase: new URL(site),
+  title: { default: "ToolHub — Free Online PDF, Image, Developer & Survey Tools", template: "%s | ToolHub" },
+  description: "90+ free online tools: merge & compress PDF, convert images, coordinate conversion, calculators and more. Most run privately in your browser.",
+  openGraph: { type: "website", siteName: "ToolHub" },
 };
+export const viewport: Viewport = { themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f8fafc" }, { media: "(prefers-color-scheme: dark)", color: "#0b1020" }] };
+
+// Runs before paint so there is no light/dark flash.
+const themeScript = `try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>
-        <header className="border-b border-slate-200 bg-white">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-            <Link href="/" className="text-lg font-bold text-indigo-600">ToolHub</Link>
-            <span className="text-xs text-slate-500">Private by design — most tools run in your browser</span>
-          </div>
-        </header>
-        <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
-        <footer className="border-t border-slate-200 py-6 text-center text-xs text-slate-500">© ToolHub</footer>
+    <html lang="en" suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
+      <body className="flex min-h-screen flex-col">
+        <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-white focus:p-2">Skip to content</a>
+        <Header />
+        <main id="main" className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">{children}</main>
+        <Footer />
       </body>
     </html>
   );

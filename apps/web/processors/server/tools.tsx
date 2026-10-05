@@ -53,7 +53,7 @@ function ServerTool({ slug }: { slug: string }) {
   return (
     <div className="space-y-4">
       <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900">☁️ This tool runs on our servers. Files are encrypted in transit and deleted automatically within 1 hour.</p>
-      <div className="card cursor-pointer border-dashed py-10 text-center text-slate-500" onClick={() => ref.current?.click()} onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); setFiles(Array.from(e.dataTransfer.files).slice(0, tool.multiple ? 20 : 1)); setPhase({ kind: "idle" }); }}>
+      <div className="flex cursor-pointer flex-col items-center gap-1 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-12 text-center text-slate-500 transition hover:border-indigo-400 hover:bg-indigo-50" onClick={() => ref.current?.click()} onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); setFiles(Array.from(e.dataTransfer.files).slice(0, tool.multiple ? 20 : 1)); setPhase({ kind: "idle" }); }}>
         Drop a file here or click to browse ({tool.accept?.join(", ")}, max {tool.limits?.freeMB} MB)
         <input ref={ref} type="file" hidden accept={tool.accept?.join(",")} onChange={(e) => { setFiles(Array.from(e.target.files ?? []).slice(0, tool.multiple ? 20 : 1)); setPhase({ kind: "idle" }); }} />
       </div>

@@ -1,6 +1,39 @@
 @import "tailwindcss";
-body { @apply bg-slate-50 text-slate-900 antialiased; }
-.input { @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none; }
-.btn { @apply rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50; }
-.btn-ghost { @apply rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm hover:bg-slate-100; }
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Noto Naskh Arabic", sans-serif;
+  --color-brand: #4f46e5;
+}
+
+/* Dark mode: remap the palette so every existing utility (bg-white, text-slate-*, bg-indigo-50 …) adapts automatically. */
+html.dark {
+  color-scheme: dark;
+  --color-white: #121829;
+  --color-slate-50: #0b1020; --color-slate-100: #172036; --color-slate-200: #263149; --color-slate-300: #34405d;
+  --color-slate-400: #7c87a6; --color-slate-500: #98a2bf; --color-slate-600: #b4bcd3; --color-slate-700: #cbd2e4;
+  --color-slate-800: #e1e6f2; --color-slate-900: #f1f4fb;
+  --color-indigo-50: #1b2147; --color-indigo-100: #252d5e; --color-indigo-400: #818cf8; --color-indigo-500: #818cf8; --color-indigo-600: #5b5ff0; --color-indigo-700: #4a4ee0;
+  --color-emerald-100: #0f3a2e; --color-emerald-800: #a7f3d0; --color-emerald-600: #059669; --color-emerald-700: #34d399;
+  --color-amber-50: #33270b; --color-amber-900: #fde68a; --color-red-600: #f87171;
+}
+
+html { scroll-behavior: smooth; }
+body { @apply bg-slate-50 text-slate-900 antialiased; font-family: var(--font-sans); }
+html[dir="rtl"] body { font-family: var(--font-sans); }
+::selection { background: color-mix(in oklab, var(--color-brand) 30%, transparent); }
+:focus-visible { outline: 2px solid var(--color-indigo-500); outline-offset: 2px; }
+
+.input { @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20; }
+.btn { @apply inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-50; }
+.btn-ghost { @apply inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100; }
 .card { @apply rounded-xl border border-slate-200 bg-white p-4 shadow-sm; }
+.chip { @apply inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 transition hover:border-indigo-400 hover:text-indigo-600; }
+.section-title { @apply text-xl font-bold tracking-tight sm:text-2xl; }
+.prose-tool p { @apply leading-relaxed text-slate-600; }
+.prose-tool h2 { @apply mb-2 mt-8 text-xl font-bold; }
+.prose-tool ul { @apply list-disc space-y-1 pl-5 text-slate-600; }
+.hero-bg { background: radial-gradient(60rem 28rem at 15% -10%, color-mix(in oklab, var(--color-indigo-500) 22%, transparent), transparent), radial-gradient(40rem 24rem at 95% 0%, color-mix(in oklab, #10b981 16%, transparent), transparent); }
+@keyframes fade-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.fade-in { animation: fade-in .25s ease-out both; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
