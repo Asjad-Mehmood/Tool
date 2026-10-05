@@ -1,0 +1,74 @@
+// Phase 4 (accounts, usage limits, billing) will wire this up. BullMQ in Redis is the source of truth for live job state until then.
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String?
+  plan         Plan          @default(FREE)
+  aiCredits    Int           @default(0)
+  createdAt    DateTime      @default(now())
+  jobs         Job[]
+  favorites    Favorite[]
+  apiKeys      ApiKey[]
+  subscription Subscription?
+}
+
+model Job {
+  id         String    @id @default(cuid())
+  userId     String?
+  user       User?     @relation(fields: [userId], references: [id])
+  tool       String
+  status     JobStatus @default(QUEUED)
+  progress   Int       @default(0)
+  inputKeys  String[]
+  outputKey  String?
+  options    Json?
+  error      String?
+  bytesIn    BigInt    @default(0)
+  durationMs Int?
+  ipHash     String?
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime
+  @@index([userId, createdAt])
+}
+
+model Usage {
+  id      String   @id @default(cuid())
+  subject String
+  date    DateTime @db.Date
+  tasks   Int      @default(0)
+  bytes   BigInt   @default(0)
+  @@unique([subject, date])
+}
+
+model Favorite {
+  userId String
+  tool   String
+  user   User   @relation(fields: [userId], references: [id])
+  @@id([userId, tool])
+}
+
+model ApiKey {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  hashedKey String    @unique
+  name      String
+  lastUsed  DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model Subscription {
+  id         String    @id @default(cuid())
+  userId     String    @unique
+  user       User      @relation(fields: [userId], references: [id])
+  provider   String
+  externalId String    @unique
+  status     String
+  renewsAt   DateTime?
+}
+
+enum Plan { FREE PRO TEAM }
+enum JobStatus { QUEUED PROCESSING DONE FAILED EXPIRED }

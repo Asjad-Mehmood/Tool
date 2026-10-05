@@ -1,6 +1,6 @@
 export type Engine = "instant" | "client" | "server" | "ai";
 export type UIKind = "file" | "text" | "form" | "editor";
-export type CategoryId = "pdf" | "image" | "text" | "dev" | "security" | "converter" | "calculator" | "survey" | "generator";
+export type CategoryId = "pdf" | "image" | "video" | "audio" | "text" | "dev" | "security" | "network" | "converter" | "calculator" | "survey" | "generator" | "archive" | "data";
 
 export interface ToolOption {
   key: string;
