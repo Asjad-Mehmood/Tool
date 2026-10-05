@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+export const dynamic = "force-static";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "ToolHub PDF", short_name: "ToolHub", description: "Free online PDF tools — most run privately in your browser.",

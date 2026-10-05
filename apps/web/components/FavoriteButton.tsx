@@ -6,6 +6,7 @@ import { useMe } from "@/lib/useMe";
 
 export default function FavoriteButton({ slug }: { slug: string }) {
   const me = useMe(), [fav, setFav] = useState(false);
+  if (process.env.NEXT_PUBLIC_STATIC_SITE === "1") return null;
   useEffect(() => { if (me) fetch("/api/favorites").then((r) => r.json()).then((j) => setFav((j.favorites ?? []).includes(slug))); }, [me, slug]);
   if (me === undefined) return null;
   if (!me) return <Link href={`/login?next=/${slug}`} className="btn-ghost" title="Sign in to save favourites"><Star size={14} /> Save</Link>;

@@ -4,6 +4,7 @@ import { useMe } from "@/lib/useMe";
 
 export default function AuthButton() {
   const me = useMe();
+  if (process.env.NEXT_PUBLIC_STATIC_SITE === "1") return null;
   if (me === undefined) return <span className="h-8 w-20" aria-hidden />;
   if (!me) return <Link href="/login" className="btn !px-3 !py-1.5">Sign in</Link>;
   return (

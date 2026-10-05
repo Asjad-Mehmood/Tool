@@ -6,6 +6,7 @@ export interface Me { id: string; name: string | null; email: string; image: str
 let cache: { at: number; path: string; p: Promise<Me | null> } | null = null;
 export const refreshMe = () => { cache = null; };
 const load = () => {
+  if (process.env.NEXT_PUBLIC_STATIC_SITE === "1") return Promise.resolve(null);
   // Refetch after any client-side navigation (e.g. right after signing in) as well as every 30s.
   if (!cache || cache.path !== location.pathname || Date.now() - cache.at > 30_000) cache = { at: Date.now(), path: location.pathname, p: fetch("/api/me", { cache: "no-store" }).then((r) => r.json()).then((j) => j.user ?? null).catch(() => null) };
   return cache.p;

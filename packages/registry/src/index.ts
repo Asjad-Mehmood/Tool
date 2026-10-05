@@ -2,9 +2,13 @@ import { catalogue } from "./tools";
 import { pdfExtra } from "./tools/pdf-extra";
 import type { PdfGroup, Tool } from "./types";
 
+import { groups as allGroups } from "./groups";
+
 export * from "./types";
 export { categories } from "./categories";
-export { groups } from "./groups";
+
+/** Static builds (GitHub Pages) can only host tools that run in the browser. */
+const STATIC_SITE = process.env.NEXT_PUBLIC_STATIC_SITE === "1";
 
 /** The site is PDF-focused: only these tools are listed. Everything else in the catalogue stays in code but is hidden. */
 const GROUP_OF: Record<string, PdfGroup> = {
@@ -21,6 +25,7 @@ const GROUP_OF: Record<string, PdfGroup> = {
 /** Explicit order inside each group (groups render in this order too). */
 const ORDER = Object.keys(GROUP_OF);
 export const allTools: Tool[] = [...catalogue, ...pdfExtra].map((t) => (GROUP_OF[t.slug] ? { ...t, group: GROUP_OF[t.slug] } : { ...t, hidden: true }));
-export const tools: Tool[] = allTools.filter((t) => !t.hidden).sort((a, b) => ORDER.indexOf(a.slug) - ORDER.indexOf(b.slug));
+export const tools: Tool[] = allTools.filter((t) => !t.hidden && (!STATIC_SITE || t.engine === "client" || t.engine === "instant")).sort((a, b) => ORDER.indexOf(a.slug) - ORDER.indexOf(b.slug));
 export const getTool = (slug: string) => tools.find((t) => t.slug === slug);
 export const toolsByGroup = (id: PdfGroup) => tools.filter((t) => t.group === id);
+export const groups = allGroups.filter((g) => tools.some((t) => t.group === g.id));

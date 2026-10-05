@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: { default: "ToolHub — Free Online PDF Tools", template: "%s | ToolHub" },
   description: "Free online PDF tools: merge, split, compress, convert, sign, protect and chat with PDFs. Most run privately in your browser.",
   openGraph: { type: "website", siteName: "ToolHub" },
-  icons: { icon: "/icons/icon.svg", apple: "/icons/icon-192.png" },
+  icons: { icon: `${process.env.BASE_PATH ?? ""}/icons/icon.svg`, apple: `${process.env.BASE_PATH ?? ""}/icons/icon-192.png` },
   appleWebApp: { capable: true, title: "ToolHub" },
 };
 export const viewport: Viewport = { themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f8fafc" }, { media: "(prefers-color-scheme: dark)", color: "#0b1020" }] };

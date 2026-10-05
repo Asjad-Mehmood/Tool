@@ -36,7 +36,7 @@ export default function Home() {
         </section>
       ))}
 
-      <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-fuchsia-600 to-indigo-700 p-6 text-white shadow-lg sm:p-10">
+      {toolsByGroup("ai").length > 0 && <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-fuchsia-600 to-indigo-700 p-6 text-white shadow-lg sm:p-10">
         <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.2fr]">
           <div>
             <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold text-fuchsia-200"><Sparkles size={16} /> New · AI PDF tools</p>
@@ -46,7 +46,7 @@ export default function Home() {
           </div>
           <div className="grid gap-2 sm:grid-cols-1">{toolsByGroup("ai").map((t) => <Link key={t.slug} href={`/${t.slug}`} className="rounded-xl bg-white/10 px-4 py-3 backdrop-blur transition hover:bg-white/20"><span className="block text-sm font-semibold">{t.title}</span><span className="text-sm text-fuchsia-100">{t.shortDesc}</span></Link>)}</div>
         </div>
-      </section>
+      </section>}
 
       <section>
         <h2 className="section-title mb-6 text-center">Why people choose ToolHub</h2>
