@@ -8,6 +8,7 @@ export { groups } from "./groups";
 
 /** The site is PDF-focused: only these tools are listed. Everything else in the catalogue stays in code but is hidden. */
 const GROUP_OF: Record<string, PdfGroup> = {
+  "pdf-editor": "edit",
   "merge-pdf": "organize", "split-pdf": "organize", "rotate-pdf": "organize", "delete-pdf-pages": "organize", "extract-pdf-pages": "organize", "organize-pdf": "organize",
   "compress-pdf": "optimize", "repair-pdf": "optimize", "ocr-pdf": "optimize", "grayscale-pdf": "optimize",
   "word-to-pdf": "to-pdf", "excel-to-pdf": "to-pdf", "powerpoint-to-pdf": "to-pdf", "jpg-to-pdf": "to-pdf", "text-to-pdf": "to-pdf",

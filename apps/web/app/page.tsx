@@ -6,7 +6,7 @@ import ToolCard from "@/components/ToolCard";
 import { RecentTools } from "@/components/Recents";
 import { GroupIcon } from "@/lib/ui";
 
-const POPULAR = ["merge-pdf", "compress-pdf", "split-pdf", "word-to-pdf", "pdf-to-jpg", "jpg-to-pdf", "sign-pdf", "protect-pdf"];
+const POPULAR = ["pdf-editor", "merge-pdf", "compress-pdf", "split-pdf", "word-to-pdf", "pdf-to-jpg", "sign-pdf", "protect-pdf"];
 const CHIPS = ["merge-pdf", "compress-pdf", "ocr-pdf", "unlock-pdf", "summarize-pdf"];
 const isTool = (t: Tool | undefined): t is Tool => !!t;
 

@@ -6,6 +6,7 @@ const client = mk("pdf", "client", "file", 2), server = mk("pdf", "server", "fil
 
 /** PDF tools added after the first three phases. */
 export const pdfExtra: Tool[] = [
+  mk("pdf", "client", "editor", 1)("pdf-editor", "PDF Editor", "Edit text, annotate, sign, fill forms, redact, reorder pages and more — all in your browser", { accept: pdf, limits, wide: true, keywords: ["edit pdf", "annotate", "fill form", "pdf editor", "add text", "highlight"], related: ["sign-pdf", "redact-pdf", "merge-pdf", "compress-pdf"], isNew: true }),
   client("pdf-to-text", "PDF to Text", "Extract the text from a PDF", { accept: pdf, limits }),
   mk("pdf", "client", "text", 2)("text-to-pdf", "Text to PDF", "Turn plain text into a PDF", { limits }),
   client("edit-pdf-metadata", "Edit PDF Metadata", "Change title, author, subject and keywords", { accept: pdf, limits }),

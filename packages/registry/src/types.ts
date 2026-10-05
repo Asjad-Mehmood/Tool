@@ -29,6 +29,8 @@ export interface Tool {
   group?: PdfGroup;
   /** Hidden tools stay in code but have no page, search entry or sitemap entry. */
   hidden?: boolean;
+  /** Render full-width (used by the PDF editor). */
+  wide?: boolean;
   /** Needs a signed-in account. */
   login?: boolean;
   /** AI credits charged per run (engine "ai"). */

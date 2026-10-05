@@ -12,7 +12,7 @@ const from = (load: () => Group, key: string): Loader => async () => {
 const groups: Record<string, () => Group> = {
   text: () => import("./text/basic"), dev: () => import("./dev/basic"), units: () => import("./converter/units"),
   calc: () => import("./calc/calculators"), security: () => import("./security/tools"),
-  generator: () => import("./generator/extra"), pdf: () => import("./pdf/tools"), pdf2: () => import("./pdf/more"), ai: () => import("./ai/tools"), image: () => import("./image/tools"),
+  generator: () => import("./generator/extra"), pdf: () => import("./pdf/tools"), pdf2: () => import("./pdf/more"), ai: () => import("./ai/tools"), editor: () => import("./editor/tools"), image: () => import("./image/tools"),
   data: () => import("./data/tools"), video: () => import("./video/tools"), server: () => import("./server/tools"),
 };
 const map: [string, string[]][] = [
@@ -24,6 +24,7 @@ const map: [string, string[]][] = [
   ["generator", ["qr-code-generator", "random-picker"]],
   ["pdf", ["merge-pdf", "split-pdf", "rotate-pdf", "delete-pdf-pages", "extract-pdf-pages", "organize-pdf", "pdf-watermark", "pdf-page-numbers", "pdf-to-jpg", "jpg-to-pdf"]],
   ["pdf2", ["pdf-to-text", "text-to-pdf", "edit-pdf-metadata", "crop-pdf", "flatten-pdf", "sign-pdf", "compare-pdf", "redact-pdf"]],
+  ["editor", ["pdf-editor"]],
   ["ai", ["summarize-pdf", "chat-with-pdf", "translate-pdf"]],
   ["image", ["compress-image", "resize-image", "crop-image", "rotate-image", "convert-image", "heic-to-jpg", "exif-remover"]],
   ["data", ["create-zip", "extract-zip", "csv-excel", "kml-csv"]],

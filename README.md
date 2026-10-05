@@ -7,6 +7,7 @@ npm-workspaces monorepo:
 |---|---|
 | `apps/web` | Next.js 15 app — pages, API routes (`/api/upload`, `/api/jobs`, `/api/ai/*`, `/api/billing/*`, `/api/webhooks/payments`, `/api/v1/*`) |
 | `apps/worker` | BullMQ worker (LibreOffice, Ghostscript, qpdf, OCRmyPDF, FFmpeg, rembg, sharp) in a locked-down container |
+| `apps/web/components/editor` | The PDF Editor (`/pdf-editor`): pdf.js view layer + pdf-lib export. `tests/editor-export.mts` (`npm run test:editor -w apps/web`) unit-tests the save pipeline |
 | `packages/registry` | Tool registry — single source of truth (30 listed PDF tools; other tools stay in code but are `hidden`) |
 | `packages/server-common` | Queue/S3 helpers shared by web and worker |
 | `packages/db` | Prisma schema + migrations (users, plans, usage, credits, jobs, API keys) |

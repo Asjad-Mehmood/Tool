@@ -30,6 +30,39 @@ export default async function ToolPage({ params }: { params: Promise<{ tool: str
     { "@context": "https://schema.org", "@type": "HowTo", name: `How to use ${tool.title}`, step: steps.map((s, i) => ({ "@type": "HowToStep", position: i + 1, text: s })) },
     { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [["Home", "/"], [cat.title, `/category/${cat.id}`], [tool.title, `/${tool.slug}`]].map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: u })) },
   ];
+  if (tool.wide) {
+    return (
+      <div className="space-y-6">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
+        <RecordVisit slug={tool.slug} />
+        <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen px-2 sm:px-4"><ToolRunner slug={tool.slug} /></div>
+        <div className="mx-auto max-w-3xl">
+          <div className="flex flex-wrap items-center gap-3"><h1 className="text-3xl font-extrabold tracking-tight">{tool.title}</h1><FavoriteButton slug={tool.slug} /></div>
+          <p className="mt-1 text-slate-600">{tool.shortDesc}</p>
+          <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-800"><E size={13} /> Processed in your browser — nothing is uploaded</p>
+          <div className="prose-tool">
+            <h2>What you can do</h2>
+            <ul>
+              <li><b>Edit existing text</b> — click a line of text, retype it. Find &amp; replace across the whole document.</li>
+              <li><b>Annotate</b> — highlight, underline, strike through, draw, add shapes, arrows, stamps and comment notes.</li>
+              <li><b>Sign &amp; fill forms</b> — draw, type or upload a signature; fill existing form fields or add new ones.</li>
+              <li><b>Redact</b> — black out sensitive content and remove it permanently.</li>
+              <li><b>Organise pages</b> — reorder by drag and drop, rotate, delete, duplicate, insert blank pages or pages from another PDF, crop.</li>
+              <li><b>Finish</b> — headers, footers, page numbers, watermarks and document properties. Undo/redo everything.</li>
+            </ul>
+            <h2>Good to know</h2>
+            <ul>
+              <li>“Edit existing text” covers the original line and writes new text on top in a matching standard font — the original text still exists underneath. Use Redact when content must be gone for good.</li>
+              <li>Password-protected PDFs must be unlocked first (Unlock PDF). Scanned PDFs need OCR before their text can be edited.</li>
+              <li>Press <kbd className="rounded border px-1">?</kbd> inside the editor for keyboard shortcuts.</li>
+            </ul>
+            <h2>Frequently asked questions</h2>
+            <div className="space-y-2">{questions.map((f) => <details key={f.q} className="card group !p-0"><summary className="cursor-pointer list-none px-4 py-3 font-medium marker:hidden">{f.q}</summary><p className="px-4 pb-4">{f.a}</p></details>)}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
