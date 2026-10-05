@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import PwaRegister from "@/components/PwaRegister";
 import "./globals.css";
 
 const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://toolhub.example";
@@ -9,6 +10,8 @@ export const metadata: Metadata = {
   title: { default: "ToolHub — Free Online PDF Tools", template: "%s | ToolHub" },
   description: "Free online PDF tools: merge, split, compress, convert, sign, protect and chat with PDFs. Most run privately in your browser.",
   openGraph: { type: "website", siteName: "ToolHub" },
+  icons: { icon: "/icons/icon.svg", apple: "/icons/icon-192.png" },
+  appleWebApp: { capable: true, title: "ToolHub" },
 };
 export const viewport: Viewport = { themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f8fafc" }, { media: "(prefers-color-scheme: dark)", color: "#0b1020" }] };
 
@@ -24,6 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main id="main" className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">{children}</main>
         <Footer />
+        <PwaRegister />
       </body>
     </html>
   );
