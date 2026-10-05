@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function TextTool({ transform, placeholder, actions }: {
   transform: (input: string, action?: string) => string;
@@ -39,8 +39,8 @@ export function ResultCard({ children }: { children: React.ReactNode }) {
 
 export type Output = { blob: Blob; name: string };
 
-export function FileTool({ accept, multiple, actionLabel, run, extra, minFiles = 1, noFiles }: {
-  accept?: string; multiple?: boolean; actionLabel: string; extra?: React.ReactNode; minFiles?: number; noFiles?: boolean;
+export function FileTool({ accept, multiple, actionLabel, run, extra, minFiles = 1, noFiles, onFiles }: {
+  accept?: string; multiple?: boolean; actionLabel: string; extra?: React.ReactNode; minFiles?: number; noFiles?: boolean; onFiles?: (files: File[]) => void;
   run: (files: File[], onProgress: (msg: string) => void) => Promise<Output | Output[]>;
 }) {
   const [files, setFiles] = useState<File[]>([]);
@@ -49,6 +49,7 @@ export function FileTool({ accept, multiple, actionLabel, run, extra, minFiles =
   const [err, setErr] = useState<string>();
   const [msg, setMsg] = useState("");
   const ref = useRef<HTMLInputElement>(null);
+  useEffect(() => { onFiles?.(files); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [files]);
   const add = (list: FileList | null) => { if (list) { setFiles((f) => (multiple ? [...f, ...Array.from(list)] : Array.from(list).slice(0, 1))); setOuts([]); } };
   const go = async () => {
     setBusy(true); setErr(undefined); setMsg("");

@@ -1,7 +1,6 @@
 "use client";
 import { useState, type ComponentType } from "react";
-import { FileTool, Select, Field, type Output } from "@/components/templates";
-import { convert, systemOptions } from "@/lib-geo";
+import { FileTool, Select, type Output } from "@/components/templates";
 
 const base = (f: File) => f.name.replace(/\.[^.]+$/, "");
 
@@ -47,22 +46,4 @@ function KmlCsv() {
     }} />;
 }
 
-function BatchCoords() {
-  const [from, setFrom] = useState("EPSG:4326"), [to, setTo] = useState("UTM-40N"), [swap, setSwap] = useState(false);
-  return <FileTool accept=".csv" actionLabel="Convert CSV"
-    extra={<div className="space-y-3"><div className="grid gap-3 sm:grid-cols-2"><Select label="From" value={from} onChange={setFrom} options={systemOptions} /><Select label="To" value={to} onChange={setTo} options={systemOptions} /></div>
-      <label className="flex gap-2 text-sm"><input type="checkbox" checked={swap} onChange={(e) => setSwap(e.target.checked)} />First coordinate column is Y/Latitude/Northing (default: first = X/Longitude/Easting)</label>
-      <Field label="CSV format"><p className="text-sm text-slate-500">Two numeric columns (X,Y) per row, optionally preceded by a name/ID column. A header row is detected automatically.</p></Field></div>}
-    run={async ([f]) => {
-      const Papa = (await import("papaparse")).default, rows = Papa.parse<string[]>(await f.text(), { skipEmptyLines: true }).data, out: string[][] = [];
-      rows.forEach((r, i) => {
-        const nums = r.map((c) => parseFloat(c)), idx = nums.map((n, k) => (Number.isFinite(n) ? k : -1)).filter((k) => k >= 0);
-        if (idx.length < 2) { out.push(i === 0 ? [...r, "out_x", "out_y"] : [...r, "", ""]); return; }
-        const [a, b] = [nums[idx[idx.length - 2]], nums[idx[idx.length - 1]]];
-        try { const [x, y] = convert(from, to, swap ? b : a, swap ? a : b); out.push([...r, x.toFixed(to === "EPSG:4326" ? 8 : 3), y.toFixed(to === "EPSG:4326" ? 8 : 3)]); } catch { out.push([...r, "error", "error"]); }
-      });
-      return { blob: new Blob([Papa.unparse(out)], { type: "text/csv" }), name: `${base(f)}-converted.csv` };
-    }} />;
-}
-
-export const tools: Record<string, ComponentType> = { "create-zip": CreateZip, "extract-zip": ExtractZip, "csv-excel": CsvExcel, "kml-csv": KmlCsv, "batch-coordinate-converter": BatchCoords };
+export const tools: Record<string, ComponentType> = { "create-zip": CreateZip, "extract-zip": ExtractZip, "csv-excel": CsvExcel, "kml-csv": KmlCsv };

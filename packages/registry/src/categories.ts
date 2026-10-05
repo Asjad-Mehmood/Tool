@@ -10,7 +10,6 @@ export const categories: Category[] = [
   { id: "network", title: "Network Tools", icon: "🌐", desc: "DNS, SSL, headers, IP" },
   { id: "converter", title: "Unit Converters", icon: "📏", desc: "Length, area, weight and more" },
   { id: "calculator", title: "Calculators", icon: "🧮", desc: "Percentage, loan, age, gratuity" },
-  { id: "survey", title: "Survey & Engineering", icon: "📐", desc: "Coordinates, bearings, areas" },
   { id: "generator", title: "Generators", icon: "⚙️", desc: "QR codes and more" },
   { id: "archive", title: "Archive Tools", icon: "🗜️", desc: "Create and extract ZIP files" },
   { id: "data", title: "Data Tools", icon: "📊", desc: "CSV, Excel, KML conversions" },

@@ -1,9 +1,10 @@
 "use client";
 import { useState, type ComponentType } from "react";
 import { FileTool, Num, Select, Field, type Output } from "@/components/templates";
+import { getPdfjs } from "@/lib/pdfjs";
 
-const base = (f: File) => f.name.replace(/\.[^.]+$/, "");
-const pdfBlob = (b: Uint8Array) => new Blob([b as BlobPart], { type: "application/pdf" });
+export const base = (f: File) => f.name.replace(/\.[^.]+$/, "");
+export const pdfBlob = (b: Uint8Array) => new Blob([b as BlobPart], { type: "application/pdf" });
 
 /** "1-3, 5, 8-" → zero-based page indices */
 export function parseRanges(spec: string, total: number): number[] {
@@ -17,7 +18,7 @@ export function parseRanges(spec: string, total: number): number[] {
   if (!out.length) throw new Error("No valid pages selected");
   return out;
 }
-async function load(f: File) { const { PDFDocument } = await import("pdf-lib"); return { PDFDocument, src: await PDFDocument.load(await f.arrayBuffer(), { ignoreEncryption: false }) }; }
+export async function load(f: File) { const { PDFDocument } = await import("pdf-lib"); return { PDFDocument, src: await PDFDocument.load(await f.arrayBuffer(), { ignoreEncryption: false }) }; }
 async function pick(f: File, idx: number[]) { const { PDFDocument, src } = await load(f); const out = await PDFDocument.create(); (await out.copyPages(src, idx)).forEach((p) => out.addPage(p)); return pdfBlob(await out.save()); }
 
 function Merge() {
@@ -105,8 +106,7 @@ function PdfToJpg() {
   return <FileTool accept=".pdf" actionLabel="Convert to images"
     extra={<div className="grid gap-3 sm:grid-cols-2"><Select label="Format" value={fmt} onChange={setFmt} options={[{ value: "jpeg", label: "JPG" }, { value: "png", label: "PNG" }]} /><Select label="Quality" value={scale} onChange={setScale} options={[{ value: "1", label: "Standard (72 dpi)" }, { value: "2", label: "High (144 dpi)" }, { value: "3", label: "Very high (216 dpi)" }]} /></div>}
     run={async ([f], progress) => {
-      const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
-      pdfjs.GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url).toString();
+      const pdfjs = await getPdfjs();
       const doc = await pdfjs.getDocument({ data: await f.arrayBuffer() }).promise, outs: Output[] = [];
       for (let i = 1; i <= doc.numPages; i++) {
         progress(`Page ${i} of ${doc.numPages}`);

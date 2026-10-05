@@ -99,3 +99,10 @@ export const processors: Record<string, Processor> = {
   },
 };
 void OFFICE;
+
+processors["grayscale-pdf"] = async (c) => {
+  const f = one(c); await assertType(f, PDF);
+  const o = out(c.dir, "out.pdf");
+  await run("gs", ["-dSAFER", "-dBATCH", "-dNOPAUSE", "-dQUIET", "-sDEVICE=pdfwrite", "-sColorConversionStrategy=Gray", "-dProcessColorModel=/DeviceGray", `-sOutputFile=${o}`, f]);
+  return { file: o, name: "grayscale.pdf", contentType: "application/pdf" };
+};

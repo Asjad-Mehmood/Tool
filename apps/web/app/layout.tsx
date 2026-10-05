@@ -6,8 +6,8 @@ import "./globals.css";
 const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://toolhub.example";
 export const metadata: Metadata = {
   metadataBase: new URL(site),
-  title: { default: "ToolHub — Free Online PDF, Image, Developer & Survey Tools", template: "%s | ToolHub" },
-  description: "90+ free online tools: merge & compress PDF, convert images, coordinate conversion, calculators and more. Most run privately in your browser.",
+  title: { default: "ToolHub — Free Online PDF Tools", template: "%s | ToolHub" },
+  description: "Free online PDF tools: merge, split, compress, convert, sign, protect and chat with PDFs. Most run privately in your browser.",
   openGraph: { type: "website", siteName: "ToolHub" },
 };
 export const viewport: Viewport = { themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f8fafc" }, { media: "(prefers-color-scheme: dark)", color: "#0b1020" }] };

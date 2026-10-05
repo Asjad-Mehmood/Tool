@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Fuse from "fuse.js";
 import { tools } from "@toolhub/registry";
-import { CategoryIcon } from "@/lib/ui";
+import { GroupIcon } from "@/lib/ui";
 
 export default function SearchBox({ large, autoFocus }: { large?: boolean; autoFocus?: boolean }) {
   const [q, setQ] = useState(""), [open, setOpen] = useState(false), [idx, setIdx] = useState(0);
@@ -24,7 +24,7 @@ export default function SearchBox({ large, autoFocus }: { large?: boolean; autoF
       <Search size={large ? 20 : 16} className={`pointer-events-none absolute top-1/2 -translate-y-1/2 text-slate-400 ${large ? "left-4" : "left-3"}`} />
       <input ref={ref} autoFocus={autoFocus} role="combobox" aria-expanded={open} aria-controls="search-results" aria-label="Search tools"
         className={`input ${large ? "!rounded-2xl !py-4 !pl-12 !text-base !shadow-lg" : "!pl-9"}`}
-        placeholder={large ? "Search 90+ tools — try “merge pdf”, “marla” or “utm”…" : "Search tools…  ( / )"}
+        placeholder={large ? "Search PDF tools — try “merge”, “compress” or “sign”…" : "Search tools…  ( / )"}
         value={q} onChange={(e) => { setQ(e.target.value); setOpen(true); setIdx(0); }} onFocus={() => setOpen(true)}
         onKeyDown={(e) => {
           if (e.key === "ArrowDown") { e.preventDefault(); setIdx((i) => Math.min(i + 1, results.length - 1)); }
@@ -37,7 +37,7 @@ export default function SearchBox({ large, autoFocus }: { large?: boolean; autoF
           {results.length ? results.map((t, i) => (
             <Link key={t.slug} href={`/${t.slug}`} role="option" aria-selected={i === idx} onClick={() => { setOpen(false); setQ(""); }} onMouseEnter={() => setIdx(i)}
               className={`flex items-center gap-3 px-3 py-2.5 ${i === idx ? "bg-indigo-50" : ""}`}>
-              <CategoryIcon id={t.category} size={32} />
+              <GroupIcon id={t.group!} size={32} />
               <span className="min-w-0"><span className="block truncate text-sm font-medium">{t.title}</span><span className="block truncate text-xs text-slate-500">{t.shortDesc}</span></span>
             </Link>
           )) : <p className="px-4 py-3 text-sm text-slate-500">No tools match “{q}”.</p>}

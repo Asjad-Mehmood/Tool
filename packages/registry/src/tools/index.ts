@@ -10,10 +10,10 @@ const net = mk("network", "server", "form", 2);
 const limits = { freeMB: 50, proMB: 500 };
 const pdf = [".pdf"], img = [".jpg", ".jpeg", ".png", ".webp"];
 
-const conv = form("converter"), calc = form("calculator"), survey = form("survey"), sec = form("security");
+const conv = form("converter"), calc = form("calculator"), sec = form("security");
 const pdfc = file("pdf"), imgc = file("image", 1), vid = file("video", 2);
 
-export const tools: Tool[] = [
+export const catalogue: Tool[] = [
   // ---------- Phase 1: text ----------
   text("word-counter", "Word & Character Counter", "Count words, characters, sentences and reading time", { keywords: ["word count"], related: ["case-converter", "remove-duplicate-lines"] }),
   text("case-converter", "Case Converter", "UPPER, lower, Title, camelCase, snake_case and more", { related: ["word-counter"] }),
@@ -65,13 +65,6 @@ export const tools: Tool[] = [
   calc("zakat-calculator", "Zakat Calculator", "2.5% zakat on your zakatable wealth"),
   calc("gratuity-calculator", "End-of-Service Gratuity (UAE/Qatar/KSA)", "Estimate end-of-service gratuity — verify against current labour law"),
 
-  // ---------- Phase 1: survey ----------
-  survey("coordinate-converter", "Coordinate Converter", "Lat/Long ↔ UTM and other EPSG systems", { keywords: ["utm", "epsg", "lat long"] }),
-  survey("dms-decimal", "DMS ↔ Decimal Degrees", "Convert degrees-minutes-seconds and decimal degrees"),
-  survey("bearing-distance", "Bearing & Distance Between Points", "Inverse: bearing and distance from two coordinates"),
-  survey("forward-polar", "Coordinates from Bearing & Distance", "Forward/polar: new point from bearing and distance"),
-  survey("area-from-coordinates", "Area from Coordinates", "Shoelace area and perimeter of a polygon"),
-  survey("slope-converter", "Slope Converter", "Percent, ratio and degrees"),
 
   // ---------- Phase 1: generators ----------
   form("generator")("qr-code-generator", "QR Code Generator", "Create QR codes for URLs, WiFi, WhatsApp and text"),
@@ -103,7 +96,6 @@ export const tools: Tool[] = [
   file("archive")("extract-zip", "Extract ZIP", "Unzip an archive and download files", { accept: [".zip"], limits }),
   file("data")("csv-excel", "CSV ↔ Excel", "Convert CSV to XLSX and back", { accept: [".csv", ".xlsx", ".xls"], limits }),
   file("data")("kml-csv", "KML ↔ CSV / GeoJSON", "Extract points from KML/KMZ", { accept: [".kml", ".kmz"], limits }),
-  file("survey", 2)("batch-coordinate-converter", "Batch Coordinate Converter", "Convert a CSV of coordinates between systems", { accept: [".csv"], limits, related: ["coordinate-converter"] }),
 
   // ---------- Phase 2: video (ffmpeg.wasm) ----------
   vid("video-trim", "Trim Video", "Cut a video between two times", { accept: [".mp4", ".mov", ".webm", ".mkv"], limits: { freeMB: 100, proMB: 500 } }),

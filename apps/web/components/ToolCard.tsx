@@ -1,12 +1,12 @@
 import Link from "next/link";
 import type { Tool } from "@toolhub/registry";
-import { CategoryIcon, engineMeta } from "@/lib/ui";
+import { GroupIcon, engineMeta } from "@/lib/ui";
 
 export default function ToolCard({ tool, compact }: { tool: Tool; compact?: boolean }) {
   const e = engineMeta[tool.engine], E = e.icon;
   return (
     <Link href={`/${tool.slug}`} className="group flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-400 hover:shadow-md">
-      <CategoryIcon id={tool.category} size={compact ? 36 : 42} />
+      <GroupIcon id={tool.group!} size={compact ? 36 : 42} />
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-2">
           <span className="truncate font-semibold text-slate-900 group-hover:text-indigo-600">{tool.title}</span>

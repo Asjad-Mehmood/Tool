@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { categories, getTool, tools, type Tool } from "@toolhub/registry";
+import { getTool, groups, tools, type Tool } from "@toolhub/registry";
 import ToolRunner from "@/components/ToolRunner";
 import ToolCard from "@/components/ToolCard";
 import { RecordVisit } from "@/components/Recents";
-import { CategoryIcon, engineMeta } from "@/lib/ui";
+import { GroupIcon, engineMeta } from "@/lib/ui";
 import { faqs, howTo } from "@/lib/content";
 
 export const dynamicParams = false;
@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: { params: Promise<{ tool: str
 export default async function ToolPage({ params }: { params: Promise<{ tool: string }> }) {
   const tool = getTool((await params).tool);
   if (!tool) notFound();
-  const cat = categories.find((c) => c.id === tool.category)!, e = engineMeta[tool.engine], E = e.icon;
-  const related = [...(tool.related ?? []).map(getTool).filter((t): t is Tool => !!t), ...tools.filter((t) => t.category === tool.category && t.slug !== tool.slug)]
+  const cat = groups.find((g) => g.id === tool.group)!, e = engineMeta[tool.engine], E = e.icon;
+  const related = [...(tool.related ?? []).map(getTool).filter((t): t is Tool => !!t), ...tools.filter((t) => t.group === tool.group && t.slug !== tool.slug)]
     .filter((t, i, a) => a.findIndex((x) => x.slug === t.slug) === i).slice(0, 6);
   const questions = faqs(tool), steps = howTo(tool);
   const ld = [
@@ -35,7 +35,7 @@ export default async function ToolPage({ params }: { params: Promise<{ tool: str
       <div className="min-w-0">
         <nav className="mb-4 text-sm text-slate-500" aria-label="Breadcrumb"><Link href="/" className="hover:underline">Home</Link> / <Link href={`/category/${cat.id}`} className="hover:underline">{cat.title}</Link> / <span className="text-slate-700">{tool.title}</span></nav>
         <div className="mb-5 flex items-start gap-4">
-          <CategoryIcon id={tool.category} size={56} />
+          <GroupIcon id={tool.group!} size={56} />
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight">{tool.title}</h1>
             <p className="mt-1 text-slate-600">{tool.shortDesc}</p>
