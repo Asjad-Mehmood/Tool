@@ -18,6 +18,8 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
+      - name: Generate Prisma client (types used by shared code)
+        run: npx prisma generate --schema packages/db/prisma/schema.prisma
       - name: Prepare static site (only in-browser tools; no server routes)
         run: rm -rf apps/web/app/api apps/web/app/login apps/web/app/dashboard apps/web/app/pricing apps/web/app/docs
       - name: Build
