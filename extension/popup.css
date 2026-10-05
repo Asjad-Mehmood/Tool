@@ -1,0 +1,10 @@
+:root { color-scheme: light dark; --bg:#fff; --fg:#0f172a; --muted:#64748b; --line:#e2e8f0; --acc:#e11d48; --hover:#f1f5f9; }
+@media (prefers-color-scheme: dark) { :root { --bg:#0b1020; --fg:#f1f4fb; --muted:#98a2bf; --line:#263149; --hover:#172036; } }
+body { width: 340px; margin: 0; background: var(--bg); color: var(--fg); font: 14px system-ui, sans-serif; }
+header { padding: 12px 14px 4px; font-size: 15px; } header span { color: var(--acc); font-weight: 700; }
+#q { display:block; box-sizing:border-box; width: calc(100% - 28px); margin: 8px 14px; padding: 8px 10px; border:1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); }
+main { max-height: 380px; overflow: auto; padding: 0 6px 10px; }
+h2 { margin: 10px 8px 2px; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+a { display:block; padding: 7px 8px; border-radius: 6px; color: inherit; text-decoration: none; } a:hover, a:focus { background: var(--hover); outline: none; }
+a small { display:block; color: var(--muted); font-size: 12px; }
+p { margin: 14px; color: var(--muted); }

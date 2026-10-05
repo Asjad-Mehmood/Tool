@@ -1,0 +1,46 @@
+# Local dev / single-VPS deployment for the server tools.
+# The worker lives on an `internal` network with NO outbound internet access (Redis + MinIO only).
+services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports: ["127.0.0.1:6379:6379"]
+    networks: [internal, edge]
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    environment: { MINIO_ROOT_USER: minioadmin, MINIO_ROOT_PASSWORD: minioadmin }
+    ports: ["127.0.0.1:9000:9000", "127.0.0.1:9001:9001"]
+    volumes: [minio:/data]
+    networks: [internal, edge]
+  minio-init:
+    image: minio/mc
+    depends_on: [minio]
+    entrypoint: >
+      /bin/sh -c "until mc alias set local http://minio:9000 minioadmin minioadmin; do sleep 1; done;
+      mc mb -p local/toolhub; mc anonymous set none local/toolhub; mc ilm rule add --expire-days 1 local/toolhub; exit 0"
+    networks: [internal]
+  worker:
+    build: { context: ., dockerfile: apps/worker/Dockerfile }
+    depends_on: [redis, minio]
+    environment:
+      REDIS_URL: redis://redis:6379
+      S3_ENDPOINT: http://minio:9000
+      S3_BUCKET: toolhub
+      S3_ACCESS_KEY: minioadmin
+      S3_SECRET_KEY: minioadmin
+      WORKER_CONCURRENCY: "2"
+      JOB_TIMEOUT_MS: "120000"
+    read_only: true
+    tmpfs: ["/tmp:size=2g,mode=1777"]
+    user: node
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 4g
+    cpus: 2
+    pids_limit: 512
+    networks: [internal]
+volumes: { minio: {} }
+networks:
+  internal: { internal: true }   # no route to the internet
+  edge: {}                        # lets the host reach published Redis/MinIO ports

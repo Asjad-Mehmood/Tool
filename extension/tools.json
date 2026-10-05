@@ -1,0 +1,197 @@
+{
+  "site": "https://toolhub.example",
+  "groups": [
+    {
+      "id": "organize",
+      "title": "Organize PDF",
+      "tools": [
+        {
+          "slug": "merge-pdf",
+          "title": "Merge PDF",
+          "desc": "Combine multiple PDFs into one file"
+        },
+        {
+          "slug": "split-pdf",
+          "title": "Split PDF",
+          "desc": "Split a PDF into single pages or ranges"
+        },
+        {
+          "slug": "rotate-pdf",
+          "title": "Rotate PDF",
+          "desc": "Rotate all or selected PDF pages"
+        },
+        {
+          "slug": "delete-pdf-pages",
+          "title": "Delete PDF Pages",
+          "desc": "Remove pages from a PDF"
+        },
+        {
+          "slug": "extract-pdf-pages",
+          "title": "Extract PDF Pages",
+          "desc": "Keep only the pages you need"
+        },
+        {
+          "slug": "organize-pdf",
+          "title": "Organize PDF Pages",
+          "desc": "Reorder PDF pages"
+        }
+      ]
+    },
+    {
+      "id": "optimize",
+      "title": "Optimize PDF",
+      "tools": [
+        {
+          "slug": "compress-pdf",
+          "title": "Compress PDF",
+          "desc": "Shrink PDF size with Ghostscript"
+        },
+        {
+          "slug": "repair-pdf",
+          "title": "Repair PDF",
+          "desc": "Try to fix a damaged PDF"
+        },
+        {
+          "slug": "ocr-pdf",
+          "title": "OCR PDF",
+          "desc": "Make a scanned PDF searchable"
+        },
+        {
+          "slug": "grayscale-pdf",
+          "title": "Grayscale PDF",
+          "desc": "Convert a colour PDF to black and white"
+        }
+      ]
+    },
+    {
+      "id": "to-pdf",
+      "title": "Convert to PDF",
+      "tools": [
+        {
+          "slug": "word-to-pdf",
+          "title": "Word to PDF",
+          "desc": "Convert DOC/DOCX to PDF"
+        },
+        {
+          "slug": "excel-to-pdf",
+          "title": "Excel to PDF",
+          "desc": "Convert XLS/XLSX to PDF"
+        },
+        {
+          "slug": "powerpoint-to-pdf",
+          "title": "PowerPoint to PDF",
+          "desc": "Convert PPT/PPTX to PDF"
+        },
+        {
+          "slug": "jpg-to-pdf",
+          "title": "JPG / PNG to PDF",
+          "desc": "Combine images into one PDF"
+        },
+        {
+          "slug": "text-to-pdf",
+          "title": "Text to PDF",
+          "desc": "Turn plain text into a PDF"
+        }
+      ]
+    },
+    {
+      "id": "from-pdf",
+      "title": "Convert from PDF",
+      "tools": [
+        {
+          "slug": "pdf-to-jpg",
+          "title": "PDF to JPG",
+          "desc": "Render PDF pages as images"
+        },
+        {
+          "slug": "pdf-to-text",
+          "title": "PDF to Text",
+          "desc": "Extract the text from a PDF"
+        }
+      ]
+    },
+    {
+      "id": "edit",
+      "title": "Edit PDF",
+      "tools": [
+        {
+          "slug": "pdf-watermark",
+          "title": "Add Watermark to PDF",
+          "desc": "Stamp text across PDF pages"
+        },
+        {
+          "slug": "pdf-page-numbers",
+          "title": "Add Page Numbers to PDF",
+          "desc": "Number every page of a PDF"
+        },
+        {
+          "slug": "crop-pdf",
+          "title": "Crop PDF",
+          "desc": "Trim margins from every page"
+        },
+        {
+          "slug": "sign-pdf",
+          "title": "Sign PDF",
+          "desc": "Draw or type your signature and place it on a page"
+        },
+        {
+          "slug": "edit-pdf-metadata",
+          "title": "Edit PDF Metadata",
+          "desc": "Change title, author, subject and keywords"
+        },
+        {
+          "slug": "flatten-pdf",
+          "title": "Flatten PDF",
+          "desc": "Make form fields and annotations permanent"
+        },
+        {
+          "slug": "compare-pdf",
+          "title": "Compare PDFs",
+          "desc": "See what changed between two PDF versions"
+        }
+      ]
+    },
+    {
+      "id": "secure",
+      "title": "PDF Security",
+      "tools": [
+        {
+          "slug": "protect-pdf",
+          "title": "Protect PDF",
+          "desc": "Add a password to a PDF"
+        },
+        {
+          "slug": "unlock-pdf",
+          "title": "Unlock PDF",
+          "desc": "Remove a password you already know"
+        },
+        {
+          "slug": "redact-pdf",
+          "title": "Redact PDF",
+          "desc": "Permanently black out words and phrases"
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "title": "AI PDF Tools",
+      "tools": [
+        {
+          "slug": "summarize-pdf",
+          "title": "Summarize PDF",
+          "desc": "Get a clear AI summary of any PDF"
+        },
+        {
+          "slug": "chat-with-pdf",
+          "title": "Chat with PDF",
+          "desc": "Ask questions and get answers from your PDF"
+        },
+        {
+          "slug": "translate-pdf",
+          "title": "Translate PDF",
+          "desc": "Translate a PDF’s text into another language"
+        }
+      ]
+    }
+  ]
+}

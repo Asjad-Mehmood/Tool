@@ -1,6 +1,14 @@
 import type { MetadataRoute } from "next";
-import { tools } from "@toolhub/registry";
-const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://toolhub.example";
+import { groups, tools } from "@toolhub/registry";
+import { posts } from "@/lib/blog";
+import { SITE_URL as base, STATIC_SITE } from "@/lib/site";
+
+export const dynamic = "force-static";
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [{ url: base }, ...tools.map((t) => ({ url: `${base}/${t.slug}` }))];
+  return [
+    ...["", "/tools", "/pricing", "/about", "/privacy", "/terms", "/blog", "/docs/api"].filter((p) => !STATIC_SITE || (p !== "/pricing" && p !== "/docs/api")).map((p) => ({ url: base + p, priority: p === "" ? 1 : 0.5 })),
+    ...groups.map((g) => ({ url: `${base}/category/${g.id}`, priority: 0.7 })),
+    ...posts.map((p) => ({ url: `${base}/blog/${p.slug}`, priority: 0.6 })),
+    ...tools.map((t) => ({ url: `${base}/${t.slug}`, priority: t.priority === 1 ? 0.9 : 0.6 })),
+  ];
 }
