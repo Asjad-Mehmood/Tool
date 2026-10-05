@@ -1,30 +1,73 @@
-// Phase 4 (accounts, usage limits, billing) will wire this up. BullMQ in Redis is the source of truth for live job state until then.
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
 model User {
-  id           String        @id @default(cuid())
-  email        String        @unique
-  name         String?
-  plan         Plan          @default(FREE)
-  aiCredits    Int           @default(0)
-  createdAt    DateTime      @default(now())
-  jobs         Job[]
-  favorites    Favorite[]
-  apiKeys      ApiKey[]
-  subscription Subscription?
+  id                 String          @id @default(cuid())
+  email              String          @unique
+  emailVerified      DateTime?
+  name               String?
+  image              String?
+  plan               Plan            @default(FREE)
+  /** Purchased / bonus credits. Never expire. */
+  aiCredits          Int             @default(0)
+  /** Credits used from the monthly plan allowance in `creditMonth` (YYYY-MM, UTC). */
+  creditMonthUsed    Int             @default(0)
+  creditMonth        String          @default("")
+  createdAt          DateTime        @default(now())
+  accounts           Account[]
+  sessions           Session[]
+  jobs               Job[]
+  favorites          Favorite[]
+  apiKeys            ApiKey[]
+  ledger             CreditLedger[]
+  subscription       Subscription?
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  @@unique([identifier, token])
 }
 
 model Job {
-  id         String    @id @default(cuid())
+  id         String    @id                // unguessable id, also used as the queue job id
   userId     String?
-  user       User?     @relation(fields: [userId], references: [id])
+  user       User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   tool       String
   status     JobStatus @default(QUEUED)
-  progress   Int       @default(0)
-  inputKeys  String[]
-  outputKey  String?
-  options    Json?
+  inputNames String[]
+  outputName String?
   error      String?
   bytesIn    BigInt    @default(0)
   durationMs Int?
@@ -36,6 +79,7 @@ model Job {
 
 model Usage {
   id      String   @id @default(cuid())
+  /** user id, or hashed IP for anonymous visitors */
   subject String
   date    DateTime @db.Date
   tasks   Int      @default(0)
@@ -44,31 +88,68 @@ model Usage {
 }
 
 model Favorite {
-  userId String
-  tool   String
-  user   User   @relation(fields: [userId], references: [id])
+  userId    String
+  tool      String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@id([userId, tool])
 }
 
 model ApiKey {
   id        String    @id @default(cuid())
   userId    String
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /** sha256 of the full key — the raw key is shown once and never stored */
   hashedKey String    @unique
+  /** first characters, for display only */
+  prefix    String
   name      String
   lastUsed  DateTime?
+  revokedAt DateTime?
   createdAt DateTime  @default(now())
 }
 
 model Subscription {
-  id         String    @id @default(cuid())
-  userId     String    @unique
-  user       User      @relation(fields: [userId], references: [id])
-  provider   String
-  externalId String    @unique
-  status     String
-  renewsAt   DateTime?
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider    String
+  externalId  String    @unique
+  customerId  String?
+  variantId   String?
+  status      String
+  renewsAt    DateTime?
+  endsAt      DateTime?
+  portalUrl   String?
+  updatedAt   DateTime  @updatedAt
 }
 
-enum Plan { FREE PRO TEAM }
-enum JobStatus { QUEUED PROCESSING DONE FAILED EXPIRED }
+/** Append-only record of credit changes. `ref` makes grants idempotent (e.g. "order:123"). */
+model CreditLedger {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  delta     Int
+  reason    String
+  ref       String?  @unique
+  createdAt DateTime @default(now())
+  @@index([userId, createdAt])
+}
+
+model WebhookEvent {
+  id         String   @id
+  receivedAt DateTime @default(now())
+}
+
+enum Plan {
+  FREE
+  PRO
+  TEAM
+}
+enum JobStatus {
+  QUEUED
+  PROCESSING
+  DONE
+  FAILED
+  EXPIRED
+}

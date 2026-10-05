@@ -1,7 +1,10 @@
 "use client";
 import { useEffect, useRef, useState, type ComponentType } from "react";
 import { getTool, tools as registry } from "@toolhub/registry";
+import Link from "next/link";
 import { Field, Select } from "@/components/templates";
+import Turnstile from "@/components/Turnstile";
+import { refreshMe, useMe } from "@/lib/useMe";
 
 type Phase = { kind: "idle" } | { kind: "uploading"; pct: number } | { kind: "queued" } | { kind: "processing"; pct: number } | { kind: "done"; url: string; name: string } | { kind: "error"; msg: string };
 
@@ -21,6 +24,7 @@ function ServerTool({ slug }: { slug: string }) {
   const [files, setFiles] = useState<File[]>([]);
   const [opts, setOpts] = useState<Record<string, string>>(() => Object.fromEntries((tool.options ?? []).map((o) => [o.key, String(o.default)])));
   const [phase, setPhase] = useState<Phase>({ kind: "idle" });
+  const me = useMe(), [captcha, setCaptcha] = useState<string>(), [quota, setQuota] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => clearTimeout(timer.current), []);
@@ -42,11 +46,11 @@ function ServerTool({ slug }: { slug: string }) {
     try {
       setPhase({ kind: "uploading", pct: 0 });
       const up = await fetch("/api/upload", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ tool: slug, files: files.map((f) => ({ name: f.name, size: f.size })) }) });
-      const uj = await up.json(); if (!up.ok) throw new Error(uj.error ?? "Upload rejected");
+      const uj = await up.json(); if (!up.ok) { setQuota(uj.code === "quota" || uj.code === "size"); throw new Error(uj.error ?? "Upload rejected"); }
       await Promise.all((uj.uploads as { key: string; url: string }[]).map((u, i) => putFile(u.url, files[i], (p) => setPhase({ kind: "uploading", pct: p }))));
-      const jr = await fetch("/api/jobs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ tool: slug, fileKeys: uj.uploads.map((u: { key: string }) => u.key), fileNames: files.map((f) => f.name), options: opts }) });
-      const jj = await jr.json(); if (!jr.ok) throw new Error(jj.error ?? "Could not start job");
-      setPhase({ kind: "queued" }); poll(jj.jobId);
+      const jr = await fetch("/api/jobs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ tool: slug, fileKeys: uj.uploads.map((u: { key: string }) => u.key), fileNames: files.map((f) => f.name), options: opts, turnstileToken: captcha }) });
+      const jj = await jr.json(); if (!jr.ok) { setQuota(jj.code === "quota" || jj.code === "size"); throw new Error(jj.error ?? "Could not start job"); }
+      refreshMe(); setPhase({ kind: "queued" }); poll(jj.jobId);
     } catch (e) { setPhase({ kind: "error", msg: (e as Error).message }); }
   };
 
@@ -59,6 +63,7 @@ function ServerTool({ slug }: { slug: string }) {
       </div>
       {files.map((f, i) => <div key={i} className="card py-2 text-sm">{f.name} <span className="text-slate-400">({(f.size / 1048576).toFixed(1)} MB)</span></div>)}
       {(tool.options ?? []).map((o) => o.type === "select" ? <Select key={o.key} label={o.label} value={opts[o.key]} onChange={(v) => setOpts({ ...opts, [o.key]: v })} options={o.choices ?? []} /> : <Field key={o.key} label={o.label}><input className="input" type={o.key.toLowerCase().includes("password") ? "password" : "text"} value={opts[o.key]} onChange={(e) => setOpts({ ...opts, [o.key]: e.target.value })} /></Field>)}
+      {me === null && <Turnstile onToken={setCaptcha} />}
       <div className="flex flex-wrap items-center gap-3">
         <button className="btn" disabled={!files.length || busy} onClick={go}>{busy ? "Working…" : "Process on server"}</button>
         {phase.kind === "uploading" && <span className="text-sm text-slate-500">Uploading {phase.pct}%</span>}
@@ -67,6 +72,8 @@ function ServerTool({ slug }: { slug: string }) {
         {phase.kind === "done" && <a className="btn !bg-emerald-600" href={phase.url} download={phase.name}>Download {phase.name}</a>}
         {phase.kind === "error" && <span className="text-sm text-red-600">{phase.msg}</span>}
       </div>
+      {quota && <p className="text-sm">{me ? <Link className="font-medium text-indigo-600 underline" href="/pricing">Upgrade for higher limits →</Link> : <Link className="font-medium text-indigo-600 underline" href={`/login?next=/${slug}`}>Sign in for higher limits →</Link>}</p>}
+      {me && <p className="text-xs text-slate-500">{me.tasksToday} of {me.tasksPerDay} server tasks used today · {me.planName} plan</p>}
     </div>
   );
 }

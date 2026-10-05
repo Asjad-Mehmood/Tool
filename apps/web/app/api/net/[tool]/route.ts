@@ -51,7 +51,7 @@ async function handle(tool: string, input: string, req: Request) {
 
 export async function POST(req: Request, { params }: { params: Promise<{ tool: string }> }) {
   const { tool } = await params, ip = clientIp(req);
-  if (limited(`net:${ip}`, 20, 60_000)) return NextResponse.json({ error: "Too many requests — try again in a minute" }, { status: 429 });
+  if (await limited(`net:${ip}`, 20, 60_000)) return NextResponse.json({ error: "Too many requests — try again in a minute" }, { status: 429 });
   let input = "";
   try { input = String(((await req.json().catch(() => ({}))) as { input?: string }).input ?? ""); } catch { /* empty */ }
   if (input.length > 300) return NextResponse.json({ error: "Input too long" }, { status: 400 });

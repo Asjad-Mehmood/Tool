@@ -5,6 +5,8 @@ import { getTool, groups, tools, type Tool } from "@toolhub/registry";
 import ToolRunner from "@/components/ToolRunner";
 import ToolCard from "@/components/ToolCard";
 import { RecordVisit } from "@/components/Recents";
+import FavoriteButton from "@/components/FavoriteButton";
+import AdSlot from "@/components/AdSlot";
 import { GroupIcon, engineMeta } from "@/lib/ui";
 import { faqs, howTo } from "@/lib/content";
 
@@ -37,7 +39,7 @@ export default async function ToolPage({ params }: { params: Promise<{ tool: str
         <div className="mb-5 flex items-start gap-4">
           <GroupIcon id={tool.group!} size={56} />
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight">{tool.title}</h1>
+            <div className="flex flex-wrap items-center gap-3"><h1 className="text-3xl font-extrabold tracking-tight">{tool.title}</h1><FavoriteButton slug={tool.slug} /></div>
             <p className="mt-1 text-slate-600">{tool.shortDesc}</p>
             <p className={`mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${tool.engine === "server" ? "bg-amber-50 text-amber-900" : "bg-emerald-100 text-emerald-800"}`}><E size={13} /> {tool.engine === "server" ? "Processed securely on our servers · auto-deleted in 1 hour" : "Processed in your browser — nothing is uploaded"}</p>
           </div>
@@ -55,6 +57,7 @@ export default async function ToolPage({ params }: { params: Promise<{ tool: str
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Related tools</h2>
         {related.map((t) => <ToolCard key={t.slug} tool={t} compact />)}
         <Link href="/tools" className="block pt-1 text-sm font-medium text-indigo-600 hover:underline">Browse all tools →</Link>
+        <AdSlot slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR ?? "0000000000"} />
       </aside>
     </div>
   );
